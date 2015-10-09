@@ -1,3 +1,5 @@
+
+
 class Link
   attr_accessor :key, :val, :next
 
@@ -11,11 +13,13 @@ class Link
 end
 
 class LinkedList
+
+  include Enumerable
+
   attr_reader :head
 
   def initialize
     @head = Link.new
-    @tail = @head
   end
 
   def [](i)
@@ -24,18 +28,25 @@ class LinkedList
   end
 
   def first
-    @head
+    return head unless head.nil?
+    nil
   end
 
   def last
-    @tail
+    return head if head.next.nil?
+    link = head
+    until link.next.nil?
+      link = link.next
+    end
+    link
   end
 
   def empty?
-    @head.nil?
+    head.nil?
   end
 
   def get(key)
+    return nil if empty?
     link = head
     until link.next.nil?
       return link.val if link.key == key
@@ -46,25 +57,52 @@ class LinkedList
   end
 
   def include?(key)
+    return false if empty?
     link = head
     until link.next.nil?
       return true if link.key == key
       link = link.next
     end
+    return true if link.key == key
     false
   end
 
   def insert(key, val)
+    new_link = Link.new(key, val)
+    @head = new_link if head.nil?
+    if head.next.nil?
+      head.next = new_link
+    else
+      link = head.next
+      until link.next.nil?
+        link = link.next
+      end
+      link.next = new_link
+    end
   end
 
   def remove(key)
+    return nil if empty?
+    prev = head
+
+    until prev.next.key == key
+      prev = prev.next
+    end
+    
+    prev.next == prev.next.next
   end
 
   def each
+    link = head.next
+      until link.next.nil?
+        yield link
+        link = link.next
+      end
   end
 
+
   # uncomment when you have `each` working and `Enumerable` included
-  # def to_s
-  #   inject([]) { |acc, link| acc << "[#{link.key}, #{link.val}]" }.join(", ")
-  # end
+  def to_s
+    inject([]) { |acc, link| acc << "[#{link.key}, #{link.val}]" }.join(", ")
+  end
 end
