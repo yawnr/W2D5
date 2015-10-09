@@ -15,6 +15,7 @@ class LinkedList
 
   def initialize
     @head = Link.new
+    @tail = @head
   end
 
   def [](i)
@@ -23,18 +24,34 @@ class LinkedList
   end
 
   def first
+    @head
   end
 
   def last
+    @tail
   end
 
   def empty?
+    @head.nil?
   end
 
   def get(key)
+    link = head
+    until link.next.nil?
+      return link.val if link.key == key
+      link = link.next
+    end
+    return link.val if link.key == key
+    nil
   end
 
   def include?(key)
+    link = head
+    until link.next.nil?
+      return true if link.key == key
+      link = link.next
+    end
+    false
   end
 
   def insert(key, val)

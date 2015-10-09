@@ -3,22 +3,24 @@ class Fixnum
 end
 
 class Array
+
   def hash
-    hashed_arr = []
-    self.each do |element|
-      hashed_arr << element.hash.to_s[0..5].to_i if element.is_a?(Integer)
-      hashed_arr << element.hash if element.is_a?(String)
+    self.each_with_index.inject(0) do |hash, (el, i)|
+      hash ^ (el.hash + i.hash)
     end
-    hashed_arr.join.to_i
   end
 end
 
 class String
   def hash
+    self.split("").map(&:ord).hash
   end
 end
 
 class Hash
   def hash
+    hash_arr = self.to_a
+    hash_arr.sort!
+    hash_arr.hash    
   end
 end
